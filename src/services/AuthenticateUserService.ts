@@ -1,6 +1,7 @@
 import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import authConfig from '../config/auth';
 
 import User from '../models/User';
 
@@ -35,10 +36,12 @@ class AuthenticateUserService {
     // Usuário autenticado
     //Gerador de Hash - https://www.md5online.org/
 
+    const {secret, expiresIn} = authConfig.jwt;
+
     //Payload
-    const token = sign({}, '7fa1d54af48ada079d0ea1bbbe907d2a', {
+    const token = sign({}, secret, {
       subject: user.id, // É o ID do usuário que gerou este token
-      expiresIn: '1d', // É o tempo que o usuário ficará logado
+      expiresIn, // É o tempo que o usuário ficará logado
     });
     return {
       user,
