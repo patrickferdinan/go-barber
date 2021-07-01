@@ -42,28 +42,23 @@ usersRouter.post('/', async (request, response) => {
 
 // Utiliza-se o patch quando é necessario alterar apenas uma informação da column
 usersRouter.patch('/avatar', ensureAuthenticated, upload.single('avatar'), async (request, response) => {
-  console.log(request.file)
 
-  try {
-    const updateUserAvatar = new UpdateUserAvatarService();
+  const updateUserAvatar = new UpdateUserAvatarService();
 
-    const user = await updateUserAvatar.execute({
-      user_id: request.user.id!,
-      avatarFilename: request.file?.filename!,
-    });
+  const user = await updateUserAvatar.execute({
+    user_id: request.user.id!,
+    avatarFilename: request.file?.filename!,
+  });
 
-    const userWithoutPassword = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      created_at: user.created_at,
-      update_at: user.update_at,
-      avatarFilename: user.avatar,
-    };
-    return response.json(userWithoutPassword);
-  } catch (err) {
-    return response.status(400).json({ error: err.message });
-  }
+  const userWithoutPassword = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    created_at: user.created_at,
+    update_at: user.update_at,
+    avatarFilename: user.avatar,
+  };
+  return response.json(userWithoutPassword);
 });
 
 export default usersRouter;
